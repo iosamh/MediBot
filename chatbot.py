@@ -6,14 +6,13 @@ from langchain_core.messages import AIMessage, HumanMessage
 import pandas as pd 
 
 # Load environment settings
-from dotenv import load_dotenv
-load_dotenv()
+#from dotenv import load_dotenv
+#load_dotenv()
 
 # Load OpenAI API key
 
 # Initialize the model
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.5, max_tokens=1200)
-
+llm = ChatOpenAI(api_key=st.secrets["OPENAI_API_KEY"],model="gpt-4o-mini", temperature=0.5, max_tokens=1200)
 
 
 
