@@ -13,7 +13,9 @@ import pandas as pd
 # Initialize the model
 llm = ChatOpenAI(api_key=st.secrets["OPENAI_API_KEY"],model="gpt-4o-mini", temperature=0.5, max_tokens=1200)
 
+id = f"{random.randint(0, 99999):05}"
 
+#website : https://mta-medibot.streamlit.app/
 
 
 
@@ -374,10 +376,73 @@ scenarios = [
                                     "C) Bone marrow biopsy and aspirate: was requested based upon the results of the lymph node biopsy. It revealed normal bone marrow elements with no abnormal cells.")
         },
         "expected_diagnosis": "Lymphoma"
+    },{
+        "id": 10,
+        "description": ("ask the user how he feels about this experiment (here you have permission to ask for suggestions and be friendly and creative with the user, you can ask about what is hard in the exam and what is his opinion about the AI in this training ))"),
+        "tests": {},
+        "expected_diagnosis": "restart"
     }
 ]
 
-
+hints = {
+        1: [
+            "Slow movements.",
+            "His handwriting has become smaller.",
+            "His face appears still.",
+            "His grandparents had similar shaking in their hands."
+        ],
+        2: [
+            "Blue lips and tongue during activity.",
+            "Squatting position.",
+            "Finger clubbing.",
+            "Congenital."
+        ],
+        3: [
+            "Morning stiffness.",
+            "Symmetrical polyarthritis.",
+            "Presence of subcutaneous nodules.",
+            "Swan neck deformities."
+        ],
+        4: [
+            "Long-standing diabetes and hypertension.",
+            "Severe hypertension.",
+            "Signs of fluid overload.",
+            "History of urinary obstruction."
+        ],
+        5: [
+            "Low blood pressure.",
+            "Tracheal deviation.",
+            "Breathing difficulty.",
+            "Act fast."
+        ],
+        6: [
+            "NSAID.",
+            "Rigid abdomen.",
+            "Low BP.",
+            "High pulse."
+        ],
+        7: [
+            "No trauma.",
+            "Persistent pain and swelling.",
+            "Distal radius.",
+            "No systemic symptoms."
+        ],
+        8: [
+            "Galactorrhea.",
+            "Hyperprolactinemia.",
+            "Infertility.",
+            "Pituitary."
+        ],
+        9: [
+            "Lymphadenopathy.",
+            "Systemic signs.",
+            "Weight loss.",
+            "Normal leukocytes."
+        ],
+        10: [
+            "write restart to restart the app."
+        ]
+    }
 
 
 
@@ -414,7 +479,7 @@ if "current_scenario" not in st.session_state:
     st.session_state.current_scenario = 0
 
 # Display the current scenario description
-#st.write(f"Scenario {scenarios[st.session_state.current_scenario]['id']} ({scenarios[st.session_state.current_scenario]['expected_diagnosis']}): {scenarios[st.session_state.current_scenario]['description']}")
+st.write(f"Scenario {scenarios[st.session_state.current_scenario]['id']} ({scenarios[st.session_state.current_scenario]['expected_diagnosis']}): {scenarios[st.session_state.current_scenario]['description']}")
 
 # User input through chat interface
 user_query = st.chat_input("Type your question:")
@@ -424,10 +489,10 @@ if user_query:
 # Display chat history
 for message in st.session_state.chat_history:
     if isinstance(message, AIMessage):
-        with st.chat_message("AI"):
+        with st.chat_message("AI",avatar = r"src\patient.png"):
             st.write(message.content)
     elif isinstance(message, HumanMessage):
-        with st.chat_message("user"):
+        with st.chat_message("user",avatar = r"src\user.png"):
             st.write(message.content)
 
 
@@ -435,62 +500,110 @@ for message in st.session_state.chat_history:
 
 
 
+
+
+
+def join_with_newline(string_list):
+    msg_content=[]
+    for msg in string_list:
+        msg_content.append("-"+msg.content)
+
+        if isinstance(msg, AIMessage):
+            msg_content.append("\n")
+
+    return "\n".join(msg_content)
+
+
+
+
+if "attempts" not in st.session_state:
+    st.session_state.attempts = []
+
+if "note" not in st.session_state:
+    st.session_state.note = []
+
+if "excel_data" not in st.session_state:
+    st.session_state.excel_data = []
 
 
 
 with st.sidebar:
-    diagnosis = st.text_input("Type your diagnosis:")
+    if (st.session_state.current_scenario+1) >= len(scenarios):
+        st.success("you finished the test ❗")
 
+
+    diagnosis = st.text_input("Type your diagnosis:")
+    
     # Handling diagnosis submission
     if st.button("Submit Diagnosis"):
+        st.session_state.attempts.append(diagnosis)
+
         if diagnosis.lower() == scenarios[st.session_state.current_scenario]['expected_diagnosis'].lower():
             st.success("Correct diagnosis!")
+            
             st.session_state.current_scenario = (st.session_state.current_scenario + 1) % len(scenarios)  # Move to the next scenario or loop back
+            
+            #save chat_history , notes and attempts for each case and then sent as one to excel
+            st.session_state.excel_data.append([join_with_newline(st.session_state.chat_history),st.session_state.note,st.session_state.attempts])
+            
             st.session_state.chat_history = []  # Reset chat history for new scenario
-            #st.rerun()
+            st.session_state.attempts = []
+            st.session_state.note = []
+            
         else:
             st.error("Incorrect diagnosis. Try again or ask more questions.")
 
-    # Button to show more information
-    if st.button("Show More Information"):
-        st.markdown("<h2 class='header' style='text-align: center; color:green;'>Test Results and Details</h2>", unsafe_allow_html=True)
 
-        # Iterate through the test results dynamically
-        for key, value in scenarios[st.session_state.current_scenario]["tests"].items():
-            if isinstance(value, str):
-                st.markdown(f"#### :violet[{key.replace('_', ' ').title()}]")
-                st.markdown(value.replace("\n", "<br>"), unsafe_allow_html=True)
-            elif isinstance(value, dict):
-                if key == "vital_signs":
-                    st.markdown(f"#### :violet[Vital Signs]")
-                    st.table(pd.DataFrame([value]).T.rename(columns={0: ""}))
-                else:
+    # hints
+    hint_milestones = [9, 11, 13, 15, 17]
+    if (len(st.session_state.chat_history)/2) >= 9 :
+        st.success("New hint appeared!!")
+        for i, value in enumerate(hint_milestones):
+            if value <= (len(st.session_state.chat_history)/2) and i<4:
+                st.write("❗",hints[st.session_state.current_scenario+1][i])
+
+
+    
+    st.markdown("## Notes")
+    st.session_state.note = st.text_area("Write your medical notes here:",height=350)
+
+
+
+    # more info options
+    if (len(st.session_state.chat_history)/2) >= 7:
+        st.success("More information is now available!")
+
+        if st.button("Show More Information"):
+            st.markdown("<h2 class='header' style='text-align: center; color:green;'>Test Results and Details</h2>", unsafe_allow_html=True)
+            # Iterate through the test results dynamically
+            for key, value in scenarios[st.session_state.current_scenario]["tests"].items():
+                if isinstance(value, str):
                     st.markdown(f"#### :violet[{key.replace('_', ' ').title()}]")
-                    if all(isinstance(v, (int, float, str)) for v in value.values()):
+                    st.markdown(value.replace("\n", "<br>"), unsafe_allow_html=True)
+                elif isinstance(value, dict):
+                    if key == "vital_signs":
+                        st.markdown(f"#### :violet[Vital Signs]")
                         st.table(pd.DataFrame([value]).T.rename(columns={0: ""}))
                     else:
-                        for subkey, subvalue in value.items():
-                            st.write(f"**{subkey.replace('_', ' ').title()}:** {subvalue}")
-            elif isinstance(value, list):
-                st.markdown(f"#### :violet[{key.replace('_', ' ').title()}]")
-                for item in value:
-                    if isinstance(item, dict) and 'path' in item and 'caption' in item:
-                        st.image(item['path'], caption=item['caption'])
-                    else:
-                        st.write(item)
-
-    if st.button("Show Answer"):
-        st.write(scenarios[st.session_state.current_scenario]['expected_diagnosis'].lower())
-
-
-
+                        st.markdown(f"#### :violet[{key.replace('_', ' ').title()}]")
+                        if all(isinstance(v, (int, float, str)) for v in value.values()):
+                            st.table(pd.DataFrame([value]).T.rename(columns={0: ""}))
+                        else:
+                            for subkey, subvalue in value.items():
+                                st.write(f"**{subkey.replace('_', ' ').title()}:** {subvalue}")
+                elif isinstance(value, list):
+                    st.markdown(f"#### :violet[{key.replace('_', ' ').title()}]")
+                    for item in value:
+                        if isinstance(item, dict) and 'path' in item and 'caption' in item:
+                            st.image(item['path'], caption=item['caption'])
+                        else:
+                            st.write(item)
 
 
 
-
-
-
-
-
-
+    #answer button
+    if (len(st.session_state.chat_history)/2) >= 18:
+        st.success("Answer is now Available!!")
+        if st.button("Show Answer"):
+            st.write(scenarios[st.session_state.current_scenario]['expected_diagnosis'].lower())
 
