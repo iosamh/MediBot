@@ -3,6 +3,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, HumanMessage
 
 import pandas as pd 
+import random
 
 # Load environment settings
 #from dotenv import load_dotenv
