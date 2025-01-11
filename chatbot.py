@@ -487,10 +487,12 @@ user_query = st.chat_input("Type your question:")
 if user_query:
     response = get_response(user_query, st.session_state.current_scenario)
 
+AIavatar = r"src\patient.png"
+
 # Display chat history
 for message in st.session_state.chat_history:
     if isinstance(message, AIMessage):
-        with st.chat_message("AI",avatar = r"src\patient.png"):
+        with st.chat_message("AI",avatar = AIavatar):
             st.write(message.content)
     elif isinstance(message, HumanMessage):
         with st.chat_message("user"):
