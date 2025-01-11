@@ -480,7 +480,7 @@ if "current_scenario" not in st.session_state:
     st.session_state.current_scenario = 0
 
 # Display the current scenario description
-st.write(f"Scenario {scenarios[st.session_state.current_scenario]['id']} ({scenarios[st.session_state.current_scenario]['expected_diagnosis']}): {scenarios[st.session_state.current_scenario]['description']}")
+#st.write(f"Scenario {scenarios[st.session_state.current_scenario]['id']} ({scenarios[st.session_state.current_scenario]['expected_diagnosis']}): {scenarios[st.session_state.current_scenario]['description']}")
 
 # User input through chat interface
 user_query = st.chat_input("Type your question:")
@@ -603,7 +603,7 @@ with st.sidebar:
 
 
     #answer button
-    if (len(st.session_state.chat_history)/2) >= 18:
+    if (len(st.session_state.chat_history)/2) >= 16:
         st.success("Answer is now Available!!")
         if st.button("Show Answer"):
             st.write(scenarios[st.session_state.current_scenario]['expected_diagnosis'].lower())
