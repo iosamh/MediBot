@@ -493,7 +493,7 @@ for message in st.session_state.chat_history:
         with st.chat_message("AI",avatar = r"src\patient.png"):
             st.write(message.content)
     elif isinstance(message, HumanMessage):
-        with st.chat_message("user",avatar = r"src\user.png"):
+        with st.chat_message("user"):
             st.write(message.content)
 
 
