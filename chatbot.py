@@ -1,4 +1,6 @@
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, HumanMessage
 
@@ -14,11 +16,13 @@ import random
 # Initialize the model
 llm = ChatOpenAI(api_key=st.secrets["OPENAI_API_KEY"],model="gpt-4o-mini", temperature=0.5, max_tokens=1200)
 
-id = f"{random.randint(0, 99999):05}"
+
 
 #website : https://mta-medibot.streamlit.app/
 
-
+# Streamlit app setup
+st.set_page_config(page_title="MediBot")
+st.title("MediBot - Medical Training Assistant")
 
 
 
@@ -446,8 +450,47 @@ hints = {
     }
 
 
+# Initialize Google Sheets connection
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+def upload_to_gsheet(data, conn, worksheet_name="chatsheet"):
+    """
+    Uploads session data to the specified Google Sheets worksheet.
+
+    Parameters:
+        data (list): The session state data to be uploaded, typically a list of lists.
+        conn (GSheetsConnection): The Streamlit Google Sheets connection object.
+        worksheet_name (str): The name of the worksheet to update.
+    """
+    # Convert the session data into a pandas DataFrame
+    columns = ["User ID", "Chat History", "Notes", "Attempts"]
+    new_df = pd.DataFrame(data, columns=columns)
+
+    try:
+        # Read existing data from the worksheet
+        existing_data = conn.read(worksheet=worksheet_name)
+    except Exception:
+        # If reading fails, initialize an empty DataFrame with the same columns
+        existing_data = pd.DataFrame(columns=columns)
+
+    # Append the new data to the existing data
+    updated_data = pd.concat([existing_data, new_df], ignore_index=True)
+
+
+    # Update the Google Sheet using the connection
+    conn.update(worksheet=worksheet_name, data=updated_data)
 
 def get_response(user_input, scenario_id):
+    """
+    Generates a response from the AI based on the user's input and the scenario.
+
+    Parameters:
+        user_input (str): The user's input question.
+        scenario_id (int): The ID of the current scenario.
+
+    Returns:
+        str: The AI's response text.
+    """
     scenario = scenarios[scenario_id]
     chat_history = st.session_state.chat_history
     
@@ -470,17 +513,50 @@ def get_response(user_input, scenario_id):
     
     return response_text
 
-# Streamlit app setup
-st.set_page_config(page_title="MediBot")
-st.title("MediBot - Medical Training Assistant")
+def join_with_newline(string_list):
+    """
+    Joins messages into a string separated by newlines for saving in Excel.
+
+    Parameters:
+        string_list (list): List of messages in chat history.
+
+    Returns:
+        str: Joined string.
+    """
+    msg_content=[]
+    for msg in string_list:
+        msg_content.append("-"+msg.content)
+
+        if isinstance(msg, AIMessage):
+            msg_content.append("\n")
+
+    return "\n".join(msg_content)
+
+
+# Initialize session state variables
+
+if "chat_history" not in st.session_state:
+    st.session_state.id = f"{random.randint(0, 99999):05}"
+
+
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 if "current_scenario" not in st.session_state:
     st.session_state.current_scenario = 0
 
-# Display the current scenario description
-#st.write(f"Scenario {scenarios[st.session_state.current_scenario]['id']} ({scenarios[st.session_state.current_scenario]['expected_diagnosis']}): {scenarios[st.session_state.current_scenario]['description']}")
+if "attempts" not in st.session_state:
+    st.session_state.attempts = []
+
+if "note" not in st.session_state:
+    st.session_state.note = []
+
+if "excel_data" not in st.session_state:
+    st.session_state.excel_data = []
+
+# Debugging :Display the current scenario description
+#scenario = scenarios[st.session_state.current_scenario]
+#st.write(f"Scenario {scenario['id']} ({scenario['expected_diagnosis']}): {scenario['description']}")
 
 # User input through chat interface
 user_query = st.chat_input("Type your question:")
@@ -498,38 +574,18 @@ for message in st.session_state.chat_history:
 
 
 
-
-
-
-
-
-
-def join_with_newline(string_list):
-    msg_content=[]
-    for msg in string_list:
-        msg_content.append("-"+msg.content)
-
-        if isinstance(msg, AIMessage):
-            msg_content.append("\n")
-
-    return "\n".join(msg_content)
-
-
-
-
-if "attempts" not in st.session_state:
-    st.session_state.attempts = []
-
-if "note" not in st.session_state:
-    st.session_state.note = []
-
-if "excel_data" not in st.session_state:
-    st.session_state.excel_data = []
-
-
-
 with st.sidebar:
+    st.header(f"Welcome :violet[User"+st.session_state.id+"]",divider="blue")
+
     if (st.session_state.current_scenario+1) >= len(scenarios):
+        if st.session_state.excel_data:
+            try:
+                upload_to_gsheet(st.session_state.excel_data, conn)
+                st.success("Data uploaded successfully!")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+        else:
+            st.warning("No data available to upload.")
         st.success("you finished the test ❗")
 
 
@@ -545,7 +601,11 @@ with st.sidebar:
             st.session_state.current_scenario = (st.session_state.current_scenario + 1) % len(scenarios)  # Move to the next scenario or loop back
             
             #save chat_history , notes and attempts for each case and then sent as one to excel
-            st.session_state.excel_data.append([join_with_newline(st.session_state.chat_history),st.session_state.note,st.session_state.attempts])
+            st.session_state.excel_data.append([("User"+st.session_state.id),
+                join_with_newline(st.session_state.chat_history),
+                st.session_state.note,
+                st.session_state.attempts
+            ])
             
             st.session_state.chat_history = []  # Reset chat history for new scenario
             st.session_state.attempts = []
@@ -607,4 +667,3 @@ with st.sidebar:
         st.success("Answer is now Available!!")
         if st.button("Show Answer"):
             st.write(scenarios[st.session_state.current_scenario]['expected_diagnosis'].lower())
-
