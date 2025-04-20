@@ -663,7 +663,7 @@ with st.sidebar:
 
 
     #answer button
-    if (len(st.session_state.chat_history)/2) >= 16:
+    if (len(st.session_state.chat_history)/2) >= 20:
         st.success("Answer is now Available!!")
         if st.button("Show Answer"):
             st.write(scenarios[st.session_state.current_scenario]['expected_diagnosis'].lower())
