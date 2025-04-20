@@ -631,7 +631,7 @@ with st.sidebar:
 
 
     # more info options
-    if (len(st.session_state.chat_history)/2) >= 7:
+    if (len(st.session_state.chat_history)/2) >= 17:
         st.success("More information is now available!")
 
         if st.button("Show More Information"):
