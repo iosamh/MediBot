@@ -27,125 +27,10 @@ st.title("MediBot - Medical Training Assistant")
 
 
 
-
 # Define scenarios
 scenarios = [
     {
         "id": 1,
-        "description": ("A 62-year-old man presented to the Neurology Clinic of KFSH with non-disabling resting tremors in both hands. "
-                        "He experienced mild gradual progressive stiffness of his body associated with slow movements, slurred speech, and "
-                        "postural instability. He found difficulty in the initiation and termination of voluntary movements. Although the "
-                        "patient had a hand tremor that disappeared on writing, his calligraphy became slower and looked cramped and smaller "
-                        "than before. The condition started with resting tremors in his left hand for one year, which has progressed to involve "
-                        "both hands. The patient was depressed because of his illness; however, he denied any history of taking medications for that. "
-                        "Family history revealed that his grandparents had similar tremors later in their lives."),
-        "tests": {
-            "images": [
-                {"path": "data/scenario_1/image_1.png", "caption": "MRI Image Example"}
-            ],
-            "vital_signs": {
-                "BP": "130/85",
-                "Pulse": "82/min",
-                "Respiratory rate": "18/min",
-                "Temperature": "37⁰C"
-            },
-            "neurological_examination": ("Face: was expressionless face with normal cognition. \n\n"
-                                         "Gait: the patient tends to lean forward while walking with small quick steps & reduced swinging of the arms. \n\n"
-                                         "Motor examination: there were intermittent mild resting pill rolling tremors observed in both hands with mild signs of asymmetrical cogwheel rigidity; the left side was more affected than the right one. \n\n"
-                                         "Sensory examination: unremarkable."),
-            "general_examination": ("Consciousness level: The patient was conscious and oriented to time, place, and people. \n\n"
-                                    "Chest and cardiac examination: unremarkable. \n\n"
-                                    "Genitourinary examination: revealed a prostatic enlargement."),
-            "management_plan": ("The consultant started his plan of management by prescribing rasagiline 1mg/day orally. "
-                                "He requested a PET scan of the brain, and its results are shown in the attached image (B) compared with the finding of a normal person in image (A): see in the next page."),
-            "lab_results": {
-                "Hb": "16 g/dL",
-                "RBC count": "8 x 10⁶/mm³",
-                "Haematocrit": "60%",
-                "PaO₂": "53 mm/Hg (75 - 100 mmHg)",
-                "PaCO₂": "43 mm/Hg (35 - 45 mmHg)",
-                "Oxygen saturation": "Low"
-            }
-        },
-        "expected_diagnosis": "Parkinson's disease"
-    },
-    {
-        "id": 2,
-        "description": ("Ghada, a 2-year-old girl, was brought to the Pediatric Outpatient Clinic by her mother. She told the doctor that 'my girl was born with a normal weight and was all right for the first one and a half years, but for the past four to five months, I noticed that she became increasingly short of breath and her lips and tongue became blue whenever she played with her cousins or crying for any reason. She would then sit in the squatting position for some time until she recovered' (Figure 1). There was no family history of a similar condition, history of infection, or medications during pregnancy."),
-        "tests": {
-            "images": [
-                {"path": "data/scenario_2/image_1.png", "caption": "Image 1"},
-                {"path": "data/scenario_2/image_2.png", "caption": "Image 2"},
-                {"path": "data/scenario_2/image_3.png", "caption": "ECG Image"},
-                {"path": "data/scenario_2/image_4.png", "caption": "Chest X-ray"}
-            ],
-            "vital_signs": {
-                "Pulse": "140/min",
-                "Blood pressure": "102/64 mmHg",
-                "Respiratory rate": "30/min",
-                "Temperature": "36.5⁰C; measured rectally"
-            },
-            "general_examination": ("The girl was ill-looking and smaller than expected for her age. \n"
-                                    "There was bluish discoloration of the lips and tongue with clubbing of her nails (Fig. 2)."),
-            "local_examination": ("Inspection: Diffuse precordial pulsations more marked on the left parasternal area. \n"
-                                  "Auscultation: Pansystolic murmur over 3rd and 4th left parasternal spaces with palpable thrill. A single 2nd heart sound was heard on the left 2nd space."),
-            "lab_findings": ("ECG (Figure 3) showed right axis deviation, abnormal R in V1 & abnormal T wave and ST segment in V2 and V3.\n"
-                             "Echocardiography revealed right ventricular hypertrophy, a large VSD, overriding aorta and narrowing of the pulmonary outlet.\n"
-                             "Chest X-ray: Boot shaped heart (Figure 4).\n"),
-            "lab_results": {
-                "Hb": "16 g/dL",
-                "RBC count": "8 x 10⁶/mm³",
-                "Haematocrit": "60%",
-                "PaO₂": "53 mm/Hg (75 - 100 mmHg)",
-                "PaCO₂": "43 mm/Hg (35 - 45 mmHg)",
-                "Oxygen saturation": "Low"
-            }
-        },
-        "expected_diagnosis": "Tetralogy of Fallot"
-    },
-    {
-        "id": 3,
-        "description": ("Nora, a 60-year-old woman presented to the Rheumatology Clinic with pain and stiffness of the joints of her hands and wrists for the past 2 months. "
-                        "The pain and stiffness last for at least an hour in the morning but improve throughout the day and with exercise. "
-                        "Similar complaints were reported in her neck and shoulders, which aggravated her life, and she mentioned that looking down worsened the pain. "
-                        "Nora also complained of generalized weakness, fatigue, and weight loss during this period. She denied any history of fever, skin rash, vision changes, or photophobia. "
-                        "She was prescribed some analgesics by a local doctor, but discontinued them due to the development of epigastric pain."),
-        "tests": {
-            "images": [
-                {"path": "data/scenario_3/image_1.png", "caption": "Elbow Examination"},
-                {"path": "data/scenario_3/image_2.png", "caption": "Hand Examination"},
-                {"path": "data/scenario_3/image_3.png", "caption": "X-ray of the left wrist"},
-                {"path": "data/scenario_3/image_4.png", "caption": "X-ray of the left hand"}
-            ],
-            "vital_signs": {
-                "Temperature": "38°C",
-                "Respiratory rate": "18/min",
-                "Pulse": "88/min",
-                "Blood pressure": "135/90 mmHg"
-            },
-            "physical_examination": ("The patient was in mild distress. \n"
-                                     "Examination of the neck showed painful flexion, low range of motion, and no change in muscle mass or strength. \n\n"
-                                     "Examination of the shoulders revealed normal muscle mass and strength. \n\n"
-                                     "Examination of the elbows (Figure 1) demonstrated firm, non-tender subcutaneous nodules. \n\n"
-                                     "Examination of the hands (Figure 2) showed weak hand grip, painful movements of the fingers and wrists, decreased range of motion, hotness, tenderness, and swelling over the PIPs, MCPs, and wrist joints of both sides. A swan neck deformity was observed, particularly in her left middle and little fingers."),
-            "lab_results": {
-                "Haemoglobin": "9.5 g/dL",
-                "ESR": "85 mm/1st hr",
-                "WBCs": "11,500 /μL",
-                "Serum Uric acid": "5.5 mg/dL",
-                "Antinuclear antibodies (ANA)": "Negative",
-                "RA factor": "Positive",
-                "Anti-citrullinated peptide antibodies (ACPA)": "Positive"
-            },
-            "radiological_findings": ("Plain X-ray of the neck: showed that all the cervical vertebrae were normal. \n\n"
-                                      "Plain X-ray of the left wrist (AP view) Figures 3: demonstrated subtle diffuse osteopenia of the carpal bones and prominent soft tissue nodule overlying the styloid process (arrow). \n\n"
-                                      "Plain X-ray of the left hand (AP view) Figures 4: showed osteopenia around the metacarpophalangeal joints (arrows) with mild soft tissue swelling (arrowheads). \n\n"
-                                      "The doctor ordered aspiration from the left wrist joint, which was rich in neutrophils and protein, and negative for crystals and microbial growth. He requested MRI of the spine, and its results were pending.")
-        },
-        "expected_diagnosis": "Rheumatoid Arthritis"
-    },
-    {
-        "id": 4,
         "description": ("Ali, 75-years-old diabetic man brought by his son to KFSH with spontaneous bleeding from his nose, severe headache and confusion. "
                         "His son mentioned that his father was complaining of generalized weakness and swelling of his ankles and feet for the past month. He also added that his father suffered from generalized itching, decreased urine output and occasional vomiting. "
                         "Ali’ son declared that his father had a history of hypertension and diabetes mellitus for 25 years. Two years ago, he was brought to the Emergency Department because of an acute urine retention, where a senior resident failed to evacuate the urine and recommended an urgent surgical intervention, however, Ali refused. He was not well adherent to his medications."),
@@ -189,6 +74,120 @@ scenarios = [
                             "Renal nuclear scan: DTPA Test (Figure 6). The scan from 0 second till 28 minutes showed reduced renal size on both sides as well as renal uptake and excretion of trace; which was more on the right side.")
         },
         "expected_diagnosis": "Chronic Renal Failure"
+    },
+    {
+        "id": 2,
+        "description": ("A 62-year-old man presented to the Neurology Clinic of KFSH with non-disabling resting tremors in both hands. "
+                        "He experienced mild gradual progressive stiffness of his body associated with slow movements, slurred speech, and "
+                        "postural instability. He found difficulty in the initiation and termination of voluntary movements. Although the "
+                        "patient had a hand tremor that disappeared on writing, his calligraphy became slower and looked cramped and smaller "
+                        "than before. The condition started with resting tremors in his left hand for one year, which has progressed to involve "
+                        "both hands. The patient was depressed because of his illness; however, he denied any history of taking medications for that. "
+                        "Family history revealed that his grandparents had similar tremors later in their lives."),
+        "tests": {
+            "images": [
+                {"path": "data/scenario_1/image_1.png", "caption": "MRI Image Example"}
+            ],
+            "vital_signs": {
+                "BP": "130/85",
+                "Pulse": "82/min",
+                "Respiratory rate": "18/min",
+                "Temperature": "37⁰C"
+            },
+            "neurological_examination": ("Face: was expressionless face with normal cognition. \n\n"
+                                         "Gait: the patient tends to lean forward while walking with small quick steps & reduced swinging of the arms. \n\n"
+                                         "Motor examination: there were intermittent mild resting pill rolling tremors observed in both hands with mild signs of asymmetrical cogwheel rigidity; the left side was more affected than the right one. \n\n"
+                                         "Sensory examination: unremarkable."),
+            "general_examination": ("Consciousness level: The patient was conscious and oriented to time, place, and people. \n\n"
+                                    "Chest and cardiac examination: unremarkable. \n\n"
+                                    "Genitourinary examination: revealed a prostatic enlargement."),
+            "management_plan": ("The consultant started his plan of management by prescribing rasagiline 1mg/day orally. "
+                                "He requested a PET scan of the brain, and its results are shown in the attached image (B) compared with the finding of a normal person in image (A): see in the next page."),
+            "lab_results": {
+                "Hb": "16 g/dL",
+                "RBC count": "8 x 10⁶/mm³",
+                "Haematocrit": "60%",
+                "PaO₂": "53 mm/Hg (75 - 100 mmHg)",
+                "PaCO₂": "43 mm/Hg (35 - 45 mmHg)",
+                "Oxygen saturation": "Low"
+            }
+        },
+        "expected_diagnosis": "Parkinson's disease"
+    },
+    {
+        "id": 3,
+        "description": ("Ghada, a 2-year-old girl, was brought to the Pediatric Outpatient Clinic by her mother. She told the doctor that 'my girl was born with a normal weight and was all right for the first one and a half years, but for the past four to five months, I noticed that she became increasingly short of breath and her lips and tongue became blue whenever she played with her cousins or crying for any reason. She would then sit in the squatting position for some time until she recovered' (Figure 1). There was no family history of a similar condition, history of infection, or medications during pregnancy."),
+        "tests": {
+            "images": [
+                {"path": "data/scenario_2/image_1.png", "caption": "Image 1"},
+                {"path": "data/scenario_2/image_2.png", "caption": "Image 2"},
+                {"path": "data/scenario_2/image_3.png", "caption": "ECG Image"},
+                {"path": "data/scenario_2/image_4.png", "caption": "Chest X-ray"}
+            ],
+            "vital_signs": {
+                "Pulse": "140/min",
+                "Blood pressure": "102/64 mmHg",
+                "Respiratory rate": "30/min",
+                "Temperature": "36.5⁰C; measured rectally"
+            },
+            "general_examination": ("The girl was ill-looking and smaller than expected for her age. \n"
+                                    "There was bluish discoloration of the lips and tongue with clubbing of her nails (Fig. 2)."),
+            "local_examination": ("Inspection: Diffuse precordial pulsations more marked on the left parasternal area. \n"
+                                  "Auscultation: Pansystolic murmur over 3rd and 4th left parasternal spaces with palpable thrill. A single 2nd heart sound was heard on the left 2nd space."),
+            "lab_findings": ("ECG (Figure 3) showed right axis deviation, abnormal R in V1 & abnormal T wave and ST segment in V2 and V3.\n"
+                             "Echocardiography revealed right ventricular hypertrophy, a large VSD, overriding aorta and narrowing of the pulmonary outlet.\n"
+                             "Chest X-ray: Boot shaped heart (Figure 4).\n"),
+            "lab_results": {
+                "Hb": "16 g/dL",
+                "RBC count": "8 x 10⁶/mm³",
+                "Haematocrit": "60%",
+                "PaO₂": "53 mm/Hg (75 - 100 mmHg)",
+                "PaCO₂": "43 mm/Hg (35 - 45 mmHg)",
+                "Oxygen saturation": "Low"
+            }
+        },
+        "expected_diagnosis": "Tetralogy of Fallot"
+    },
+    {
+        "id": 4,
+        "description": ("Nora, a 60-year-old woman presented to the Rheumatology Clinic with pain and stiffness of the joints of her hands and wrists for the past 2 months. "
+                        "The pain and stiffness last for at least an hour in the morning but improve throughout the day and with exercise. "
+                        "Similar complaints were reported in her neck and shoulders, which aggravated her life, and she mentioned that looking down worsened the pain. "
+                        "Nora also complained of generalized weakness, fatigue, and weight loss during this period. She denied any history of fever, skin rash, vision changes, or photophobia. "
+                        "She was prescribed some analgesics by a local doctor, but discontinued them due to the development of epigastric pain."),
+        "tests": {
+            "images": [
+                {"path": "data/scenario_3/image_1.png", "caption": "Elbow Examination"},
+                {"path": "data/scenario_3/image_2.png", "caption": "Hand Examination"},
+                {"path": "data/scenario_3/image_3.png", "caption": "X-ray of the left wrist"},
+                {"path": "data/scenario_3/image_4.png", "caption": "X-ray of the left hand"}
+            ],
+            "vital_signs": {
+                "Temperature": "38°C",
+                "Respiratory rate": "18/min",
+                "Pulse": "88/min",
+                "Blood pressure": "135/90 mmHg"
+            },
+            "physical_examination": ("The patient was in mild distress. \n"
+                                     "Examination of the neck showed painful flexion, low range of motion, and no change in muscle mass or strength. \n\n"
+                                     "Examination of the shoulders revealed normal muscle mass and strength. \n\n"
+                                     "Examination of the elbows (Figure 1) demonstrated firm, non-tender subcutaneous nodules. \n\n"
+                                     "Examination of the hands (Figure 2) showed weak hand grip, painful movements of the fingers and wrists, decreased range of motion, hotness, tenderness, and swelling over the PIPs, MCPs, and wrist joints of both sides. A swan neck deformity was observed, particularly in her left middle and little fingers."),
+            "lab_results": {
+                "Haemoglobin": "9.5 g/dL",
+                "ESR": "85 mm/1st hr",
+                "WBCs": "11,500 /μL",
+                "Serum Uric acid": "5.5 mg/dL",
+                "Antinuclear antibodies (ANA)": "Negative",
+                "RA factor": "Positive",
+                "Anti-citrullinated peptide antibodies (ACPA)": "Positive"
+            },
+            "radiological_findings": ("Plain X-ray of the neck: showed that all the cervical vertebrae were normal. \n\n"
+                                      "Plain X-ray of the left wrist (AP view) Figures 3: demonstrated subtle diffuse osteopenia of the carpal bones and prominent soft tissue nodule overlying the styloid process (arrow). \n\n"
+                                      "Plain X-ray of the left hand (AP view) Figures 4: showed osteopenia around the metacarpophalangeal joints (arrows) with mild soft tissue swelling (arrowheads). \n\n"
+                                      "The doctor ordered aspiration from the left wrist joint, which was rich in neutrophils and protein, and negative for crystals and microbial growth. He requested MRI of the spine, and its results were pending.")
+        },
+        "expected_diagnosis": "Rheumatoid Arthritis"
     },
     {
         "id": 5,
